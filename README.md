@@ -45,7 +45,7 @@
   </tr>
 </table>
 
-## 为什么用了一只猫作为你的桌面伙伴
+## 为什么用了一只猫作为你的桌面伙伴？
 
 <table>
   <tr>
@@ -63,7 +63,7 @@
 
 ---
 
-## OpenClaw 和它，怎么配合
+## OpenClaw和桌宠怎么配合？
 
 ![OpenClaw 与 Desk Pet 的双向关系：状态事件传给桌宠，快捷任务传回 OpenClaw](docs/assets/readme/openclaw-desk-pet-flow.jpg)
 
@@ -72,7 +72,7 @@
 Desk Pet 不替代 OpenClaw，也不会凭空多出邮件、天气或浏览器能力。它是 OpenClaw 的桌面状态层、轻量任务入口和结果提示器。
 
 
-## 先看它跑一次任务
+## 桌宠的工作过程
 
 从桌面快捷任务开始，到 OpenClaw 思考、调用工具、创建子任务，再把结果送回气泡：
 
