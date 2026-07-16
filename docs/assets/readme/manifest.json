@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "path": "hero.jpg",
+      "role": "readme-hero",
+      "source": "AI-assisted edit of desk-sprite/console/visuals/art-still.png",
+      "width": 1536,
+      "height": 864,
+      "bytes": 166951,
+      "sha256": "ba90eea51260725ebae58485a430d1ec6385ba51834beac6759610dc78b19a3e"
+    },
+    {
+      "path": "demo-task.gif",
+      "role": "primary-workflow-demo",
+      "source": "启动任务.mov",
+      "width": 320,
+      "height": 577,
+      "duration_seconds": 36.0,
+      "bytes": 1437803,
+      "sha256": "4d23bf15ff0fa6e3f7f81b7e4064156da1231b8532388d14ea1c23a3d779fa73"
+    },
+    {
+      "path": "demo-text.gif",
+      "role": "text-input-demo",
+      "source": "录屏2026-05-07 15.19.46.mov",
+      "width": 320,
+      "height": 577,
+      "duration_seconds": 24.0,
+      "bytes": 1224862,
+      "sha256": "ef677fce268e5147a931fc4f27764786549f77ef0a9d4b5e2ad4ec1260687c23"
+    },
+    {
+      "path": "demo-sleep.gif",
+      "role": "sleep-animation-demo",
+      "source": "已发布：睡觉.mov",
+      "width": 320,
+      "height": 577,
+      "duration_seconds": 11.51,
+      "bytes": 736630,
+      "sha256": "bd37ddfd0c3d58018347134ffe3942aaf70bc7801c749e662579cec2db1faba2"
+    },
+    {
+      "path": "demo-full.mp4",
+      "role": "full-demo-video",
+      "source": "启动任务.mov",
+      "width": 360,
+      "height": 650,
+      "duration_seconds": 62.25,
+      "bytes": 643767,
+      "sha256": "0ef4e98198304c1bfb0d1eacd1865244e03ab75c189a0acb29961f97cce5b07e"
+    },
+    {
+      "path": "scene-quick-task.jpg",
+      "role": "quick-task-still",
+      "source": "启动任务.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 123321,
+      "sha256": "bbc4da01a3ac07bbb06efa38138a31cde1480816e2204c7ae314b38060adb1a4"
+    },
+    {
+      "path": "scene-subagent.jpg",
+      "role": "subagent-still",
+      "source": "启动任务.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 122506,
+      "sha256": "8bfec4a66539a08aa875d356cbcb2f4ca81c881a27f81d7143134f57445ef68b"
+    },
+    {
+      "path": "scene-tools.jpg",
+      "role": "tool-status-still",
+      "source": "录屏2026-05-07 15.18.56.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 122615,
+      "sha256": "90ad22d658ed95d263af1cef90572258a6df7aa340112dfe2a24d75456faa595"
+    },
+    {
+      "path": "scene-result.jpg",
+      "role": "result-still",
+      "source": "启动任务.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 129006,
+      "sha256": "2986aaef1304aa77887bf34b7650bc1a3411b513e9248f37a9bd3af1a9b0ab7c"
+    }
+  ]
+}

@@ -1,57 +1,181 @@
-# OpenClaw Desk Pet
+<div align="center">
 
-一个运行在 macOS 桌面的 OpenClaw 状态精灵。它会把 OpenClaw 的思考、工具调用、完成和休眠状态映射成带透明通道的猫咪动画，并提供快捷任务、文字输入、服务控制和本地配置面板。
+# 🐈 OpenClaw Desk Pet
 
-![OpenClaw Desk Pet](desk-sprite/console/visuals/art-work.png)
+**把 AI 的工作状态，养成桌面上的猫。**
 
-## 功能
+不用守着日志窗口。猫站起来，任务开始；工具标签冒出来，OpenClaw 正在干活；它重新趴下，这轮任务也差不多收尾了。
 
-- 常驻所有桌面空间的透明悬浮窗口，可拖动并记住位置。
-- 根据 OpenClaw Gateway 事件切换待机、思考、开工、工具调用、完成、浅睡和深睡动画。
-- Gateway 不可用时，回退读取 OpenClaw 主会话索引与 JSONL 会话记录。
-- 展示执行摘要、工具标签和分段后的最终回复。
-- 支持快捷任务轮播、滚轮选择和直接文字输入。
-- 支持通过 Gateway、OpenClaw CLI 或已打开的本地控制台发送消息。
-- 提供仅绑定 `127.0.0.1` 的本地配置面板。
+<p>
+  <a href="https://github.com/LeoZhaorx/openclaw-desk-pet/actions/workflows/ci.yml"><img src="https://github.com/LeoZhaorx/openclaw-desk-pet/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/macOS-13%2B-111827?logo=apple" alt="macOS 13+">
+  <img src="https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white" alt="Swift 5.9+">
+  <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white" alt="Python 3.9+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22C55E.svg" alt="MIT License"></a>
+</p>
 
-## 系统要求
+</div>
 
-- macOS 13 或更高版本。
-- Swift 5.9 或更高版本（Xcode Command Line Tools 即可）。
-- Python 3.9 或更高版本。
-- 已安装并配置 [OpenClaw](https://docs.openclaw.ai/)。
+![OpenClaw Desk Pet hero](docs/assets/readme/hero.jpg)
 
-本项目当前验证环境：macOS 15.7.4、Swift 6.2.4、Python 3.9.6、OpenClaw 2026.6.11。
+## 先看它跑一次任务
 
-## 快速开始
+从桌面快捷任务开始，到 OpenClaw 思考、调用工具、创建子任务，再把结果送回气泡：
+
+<div align="center">
+  <img src="docs/assets/readme/demo-task.gif" alt="从桌面启动 OpenClaw 任务的真实演示" width="360">
+  <br>
+  <a href="docs/assets/readme/demo-full.mp4">▶ 查看 62 秒完整演示视频</a>
+</div>
+
+这不是预设好的剧情。桌宠会监听 OpenClaw Gateway 的实时事件，并把 `thinking`、工具调用、完成和休眠状态映射成对应动画。
+
+> 演示里的“检查邮件”“查询天气”是发送给 OpenClaw 的真实任务示例，不是桌宠内置的邮件或天气服务。它能做什么，取决于你的 OpenClaw 配置与工具能力。
+
+## 它会怎么陪你工作
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/assets/readme/demo-text.gif" alt="直接在桌宠输入任务" width="300"><br>
+      <strong>想到什么，直接问</strong><br>
+      用快捷任务，也可以切到键盘输入。
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/assets/readme/demo-sleep.gif" alt="桌宠进入睡眠动画" width="300"><br>
+      <strong>没事做，就认真睡觉</strong><br>
+      从浅睡到深睡，不是永远循环同一个动作。
+    </td>
+  </tr>
+</table>
+
+### 你能从猫的状态里读到什么
+
+| OpenClaw 正在做什么 | 桌宠会怎么表现 | 你不用再猜什么 |
+| --- | --- | --- |
+| 等待任务 | 坐着、趴着，展示可切换的快捷任务 | 现在可以开始新任务 |
+| 思考与排队 | 思考气泡、专注动画 | 请求已经收到，不是卡住了 |
+| 启动任务 | 从静止自然切到工作动画 | OpenClaw 已经开工 |
+| 调用工具 | 显示 `exec`、`web`、`sessions_spawn` 等标签 | 当前跑到了哪类操作 |
+| 返回结果 | 气泡分段展示最终回复 | 不切回控制台也能先看结论 |
+| 长时间空闲 | 浅睡，再进入深睡循环 | 后台现在很安静 |
+
+## 四个真实瞬间
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/assets/readme/scene-quick-task.jpg" alt="快捷任务选择" width="320"><br>
+      <strong>快捷任务</strong><br>
+      悬停后滚动切换，点一下就发送。
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/assets/readme/scene-tools.jpg" alt="工具调用标签" width="320"><br>
+      <strong>工具调用可见</strong><br>
+      气泡会显示正在执行的工具与阶段。
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <img src="docs/assets/readme/scene-subagent.jpg" alt="创建 OpenClaw 子任务" width="320"><br>
+      <strong>子任务也看得见</strong><br>
+      `sessions_spawn` 出现时，猫正在创建子任务。
+    </td>
+    <td width="50%" align="center">
+      <img src="docs/assets/readme/scene-result.jpg" alt="任务结果气泡" width="320"><br>
+      <strong>结果送到桌面</strong><br>
+      最终回复会清理控制标记后分段展示。
+    </td>
+  </tr>
+</table>
+
+## 适合这些场景
+
+- **写代码、整理资料**：Agent 在后台跑多步任务时，不用频繁切回日志确认进度。
+- **日常自动化**：把常用指令做成快捷任务，邮件整理、日报、天气查询都可以从桌面发起。
+- **长任务与子 Agent**：工具标签和子任务状态会直接显示，知道它是在工作还是在等待。
+- **多桌面工作流**：透明窗口可跨 Space 常驻，位置会自动记住。
+- **单纯想要一只会工作的猫**：它会发呆、开工、看手机、给结果，也会从浅睡睡到深睡。
+
+## 好玩的地方，不止是换了一套皮肤
+
+### 1. 动画跟着真实状态走
+
+Gateway 的 `chat` / `agent` 事件会先被归一化成 `idle`、`thinking`、`taskStarting`、`tooling`、`completed`、`sleeping`。猫的动作来自这套状态机，不是随机播放。
+
+### 2. 切动作不会突然抽一下
+
+13 段透明 ProRes 动画分成进入、循环和退出片段。状态变化会等到安全的片段边界再切换，所以从趴着到开工、从浅睡到深睡都更自然。
+
+### 3. Gateway 暂时没消息，也不至于失明
+
+实时事件不可用时，应用会回退读取 `sessions.json` 和最近会话 JSONL 的尾部，继续判断当前状态。每次只检查有限大小的数据，不会反复扫描整段历史。
+
+### 4. 桌面就是任务入口
+
+快捷任务支持自动轮播、滚轮切换和点击发送；也可以直接输入文字。消息会依次尝试已打开的 OpenClaw 控制台、OpenClaw CLI 和 Gateway WebSocket。
+
+## 运行方式
+
+```mermaid
+flowchart LR
+    G["OpenClaw Gateway 事件"] --> M["状态协调器"]
+    F["sessions.json + JSONL 回退"] --> M
+    M --> A["13 段透明猫咪动画"]
+    M --> B["气泡、工具标签与结果"]
+    U["快捷任务 / 文字输入"] --> S["控制台 / CLI / Gateway"]
+```
+
+- **桌面端**：SwiftUI + AppKit + AVFoundation
+- **本地配置面板**：Python 标准库 HTTP 服务，只监听 `127.0.0.1`
+- **状态来源**：OpenClaw Gateway protocol v3，外加本地会话文件回退
+- **窗口行为**：透明无边框、跨 Space、可拖动、记住位置
+
+更完整的数据流与信任边界见 [架构说明](docs/ARCHITECTURE.md)。
+
+## 3 分钟开始使用
+
+### 需要准备
+
+- macOS 13 或更高版本
+- Swift 5.9 或更高版本（安装 Xcode Command Line Tools 即可）
+- Python 3.9 或更高版本
+- 已安装并配置 [OpenClaw](https://docs.openclaw.ai/)
+
+当前验证环境：macOS 15.7.4、Swift 6.2.4、Python 3.9.6、OpenClaw 2026.6.11。
+
+### 安装
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/LeoZhaorx/openclaw-desk-pet.git
 cd openclaw-desk-pet
 cp desk-sprite/.desk-sprite.env.example desk-sprite/.desk-sprite.env
 chmod 600 desk-sprite/.desk-sprite.env
 ```
 
-编辑 `desk-sprite/.desk-sprite.env`，至少确认 `OPENCLAW_ROOT` 指向你的 OpenClaw 状态目录。默认值是 `$HOME/.openclaw`。
+编辑 `desk-sprite/.desk-sprite.env`，至少确认：
 
-启动：
+```bash
+OPENCLAW_ROOT="$HOME/.openclaw"
+```
+
+然后启动：
 
 ```bash
 ./启动桌面精灵.command
 ```
 
-配置面板默认位于 [http://127.0.0.1:17890/](http://127.0.0.1:17890/)。修改配置后点击“重新载入”。
-
-停止或重启：
+本地配置面板默认位于 [http://127.0.0.1:17890/](http://127.0.0.1:17890/)。修改配置后点击“重新载入”。
 
 ```bash
 ./停止桌面精灵.command
 ./重启桌面精灵.command
 ```
 
-也可以直接在 `desk-sprite/` 目录使用 `./launch.sh`、`./halt.sh` 和 `./health.sh`。
+也可以进入 `desk-sprite/` 使用 `./launch.sh`、`./halt.sh` 和 `./health.sh`。
 
-## 配置
+<details>
+<summary><strong>配置项</strong></summary>
 
 | 变量 | 默认值 | 用途 |
 | --- | --- | --- |
@@ -59,58 +183,50 @@ chmod 600 desk-sprite/.desk-sprite.env
 | `OPENCLAW_GATEWAY_URL` | `ws://127.0.0.1:18789` | Gateway WebSocket 地址 |
 | `OPENCLAW_GATEWAY_TOKEN` | 自动发现 | 可选 Gateway Token；不要提交到 Git |
 | `OPENCLAW_ACTIVE_WINDOW_SECONDS` | `20` | 文件回退模式的活跃窗口 |
-| `OPENCLAW_START_SCRIPT` | 空 | 可选的绝对启动脚本路径；为空时运行 `openclaw gateway start` |
+| `OPENCLAW_START_SCRIPT` | 空 | 可选的绝对启动脚本；为空时运行 `openclaw gateway start` |
 | `DESK_SPRITE_CONSOLE_PORT` | `17890` | 本地配置面板端口 |
 | `DESK_SPRITE_ASSETS` | 仓库 `media/` | 动画素材目录 |
 
-Token 的发现顺序为：显式环境变量、OpenClaw 配置中的 Gateway Token、OpenClaw `.env` 文件。所有本机配置均应只保存在被 Git 忽略的 `desk-sprite/.desk-sprite.env` 中。
+Token 的发现顺序为：显式环境变量、OpenClaw 配置中的 Gateway Token、OpenClaw `.env` 文件。本机值只应保存在已被 Git 忽略的 `desk-sprite/.desk-sprite.env`。
 
-## 项目结构
+</details>
 
-```text
-.
-├── desk-sprite/
-│   ├── Package.swift                 # SwiftPM 可执行程序
-│   ├── Sources/DeskSprite/main.swift # 状态监控、UI 与动画状态机
-│   ├── console_server.py             # 仅回环地址可访问的配置服务
-│   ├── console/index.html            # 配置面板
-│   └── tests/                        # Python 安全回归测试
-├── media/                            # 运行时透明 ProRes 动画
-├── scripts/check_release.py          # 发布前泄密与文件限制检查
-└── 启动/停止/重启桌面精灵.command
-```
-
-更详细的数据流和状态机见 [架构说明](docs/ARCHITECTURE.md)。
-
-## 开发与验证
+<details>
+<summary><strong>开发与验证</strong></summary>
 
 ```bash
 swift build --package-path desk-sprite
 python3 -m unittest discover -s desk-sprite/tests -v
 python3 -m py_compile desk-sprite/console_server.py scripts/check_release.py
 bash -n desk-sprite/*.sh
-```
-
-初始化 Git 并暂存文件后，可执行发布自检：
-
-```bash
 python3 scripts/check_release.py
 ```
 
-`media/` 当前约 378MB，单文件均小于 GitHub 100MiB 硬限制；`idle-core.mov` 超过 50MiB，会触发 GitHub 的大文件提示。若以后频繁修改动画，建议迁移到 Git LFS 或 GitHub Releases，避免 Git 历史持续膨胀。
+项目使用 GitHub Actions 验证 Swift 构建、Python 测试、脚本语法和发布文件。贡献前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+</details>
 
 ## 隐私与安全
 
-- 配置面板只监听 `127.0.0.1`，并校验 Host 与 Origin；不要改成局域网监听。
-- `.desk-sprite.env`、日志、PID、构建缓存、压缩包和原尺寸素材副本均已在 `.gitignore` 中排除。
-- 应用会读取 OpenClaw 会话记录，并请求 Gateway 的 operator 权限以观察事件和发送任务。
-- 为把任务同步到已打开的 OpenClaw 网页，应用可能请求 Chrome/Safari 的 AppleScript 自动化权限。
-- 发现安全问题时请按 [安全政策](SECURITY.md) 私下报告，不要公开提交包含利用细节的 Issue。
+- 配置面板只监听 `127.0.0.1`，并校验 Host、Origin 与请求体；不要把它改成公网服务。
+- `.desk-sprite.env`、Token、日志、PID、构建缓存和原尺寸素材副本都不会进入 Git。
+- 应用会读取 OpenClaw 会话记录，并请求 Gateway 的 operator 权限来观察事件和发送任务。
+- 为把任务同步到已打开的 OpenClaw 网页，应用可能请求 Chrome / Safari 的 AppleScript 自动化权限。
 
-安全审计记录见 [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md)。
+安全设计见 [Security Policy](SECURITY.md) 与 [安全审计记录](docs/SECURITY_AUDIT.md)。
+
+## 仓库体积说明
+
+`media/` 包含运行时需要的透明 ProRes 动画，当前约 378 MB。单文件均低于 GitHub 100 MiB 硬限制；`idle-core.mov` 会触发 GitHub 的大文件提示。若以后频繁更新动画，建议把素材迁移到 Git LFS 或 GitHub Releases，避免历史持续膨胀。
+
+## English, in one minute
+
+OpenClaw Desk Pet is a native macOS overlay that turns OpenClaw agent activity into a transparent animated cat. It reflects thinking, tool calls, completion, and sleep states; shows concise results; and lets you launch quick prompts or type a task without returning to the control console.
+
+It requires an existing OpenClaw installation. The project is a community integration and is not officially endorsed by OpenClaw.
 
 ## 许可证
 
-本仓库的源码和随仓库发布的视觉素材采用 [MIT License](LICENSE)。提交视觉素材前，请确认你有权将其按该许可证再分发。
+源码与仓库内发布的视觉素材采用 [MIT License](LICENSE)。提交新素材前，请确认你有权按该许可证再分发。
 
-OpenClaw 是独立项目。本仓库是社区集成项目，不代表 OpenClaw 官方背书。
+如果它让你的 OpenClaw 更容易被“看见”，欢迎点个 Star，也欢迎带着录屏或截图来提 PR。
