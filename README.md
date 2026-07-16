@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/assets/readme/openclaw-icon.jpg" alt="OpenClaw icon" width="88">
+
 # 🐈 OpenClaw Desk Pet
 
 **把 AI 的工作状态，养成桌面上的猫。**
@@ -14,9 +16,35 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22C55E.svg" alt="MIT License"></a>
 </p>
 
+<p>
+  <a href="#先看它跑一次任务">🎬 先看演示</a> ·
+  <a href="#openclaw-和它怎么配合">🔗 看懂关系</a> ·
+  <a href="#配置不用手改控制台统一管理">⚙️ 配置台</a> ·
+  <a href="#3-分钟开始使用">🚀 开始使用</a>
+</p>
+
 </div>
 
-![OpenClaw Desk Pet hero](docs/assets/readme/hero.jpg)
+![OpenClaw Desk Pet：OpenClaw 图标、标题与三种真实猫咪状态](docs/assets/readme/hero-v2.jpg)
+
+<table>
+  <tr>
+    <td width="33%" align="center">
+      <strong>👀 看见状态</strong><br><br>
+      思考、工具调用、完成与休眠，都有对应动作。
+    </td>
+    <td width="33%" align="center">
+      <strong>🚀 从桌面下任务</strong><br><br>
+      点快捷任务，或者直接输入一句话。
+    </td>
+    <td width="33%" align="center">
+      <strong>⚙️ 配置集中管理</strong><br><br>
+      OpenClaw 路径、Gateway 与快捷按钮放在一个页面。
+    </td>
+  </tr>
+</table>
+
+---
 
 ## 先看它跑一次任务
 
@@ -31,6 +59,14 @@
 这不是预设好的剧情。桌宠会监听 OpenClaw Gateway 的实时事件，并把 `thinking`、工具调用、完成和休眠状态映射成对应动画。
 
 > 演示里的“检查邮件”“查询天气”是发送给 OpenClaw 的真实任务示例，不是桌宠内置的邮件或天气服务。它能做什么，取决于你的 OpenClaw 配置与工具能力。
+
+## OpenClaw 和它，怎么配合
+
+![OpenClaw 与 Desk Pet 的双向关系：状态事件传给桌宠，快捷任务传回 OpenClaw](docs/assets/readme/openclaw-desk-pet-flow.jpg)
+
+**OpenClaw 负责真正的 Agent 工作，Desk Pet 负责把过程变得可见。** Gateway 把状态事件送给桌宠；你在桌面点快捷任务或输入文字时，请求再交回 OpenClaw 执行。
+
+Desk Pet 不替代 OpenClaw，也不会凭空多出邮件、天气或浏览器能力。它是 OpenClaw 的桌面状态层、轻量任务入口和结果提示器。
 
 ## 它会怎么陪你工作
 
@@ -49,7 +85,36 @@
   </tr>
 </table>
 
-### 你能从猫的状态里读到什么
+## 配置不用手改：控制台统一管理
+
+![已脱敏的 DeskSprite 控制台，展示 OpenClaw 路径、Gateway 和快捷按钮配置](docs/assets/readme/config-console.jpg)
+
+<table>
+  <tr>
+    <td width="50%">
+      <strong>基础连接</strong><br>
+      选择 OpenClaw 目录，设置 Gateway 地址；Token 可以留空，由应用从本机 OpenClaw 配置自动发现。
+    </td>
+    <td width="50%">
+      <strong>启动与回退</strong><br>
+      可指定启动脚本，并调整文件回退模式的活跃时间窗口。
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>快捷按钮</strong><br>
+      直接修改常用任务文案，拖动排序；桌宠会同步读取新的按钮列表。
+    </td>
+    <td width="50%">
+      <strong>自动保存</strong><br>
+      修改会自动写入本地配置，点击“重新载入”即可让桌宠应用新设置。
+    </td>
+  </tr>
+</table>
+
+配置台默认只监听 `127.0.0.1:17890`。上图已把个人工作目录替换为 `$HOME/.openclaw`；仓库不包含本机路径、Token 或其他私密配置。
+
+## 你能从猫的状态里读到什么
 
 | OpenClaw 正在做什么 | 桌宠会怎么表现 | 你不用再猜什么 |
 | --- | --- | --- |
@@ -114,6 +179,10 @@ Gateway 的 `chat` / `agent` 事件会先被归一化成 `idle`、`thinking`、`
 ### 4. 桌面就是任务入口
 
 快捷任务支持自动轮播、滚轮切换和点击发送；也可以直接输入文字。消息会依次尝试已打开的 OpenClaw 控制台、OpenClaw CLI 和 Gateway WebSocket。
+
+### 5. 配置也有自己的控制台
+
+不用反复打开环境文件。OpenClaw 路径、Gateway、启动脚本、回退窗口和快捷任务都可以在本地页面集中修改，自动保存后重新载入即可生效。
 
 ## 运行方式
 
