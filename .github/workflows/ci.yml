@@ -18,10 +18,10 @@ jobs:
 
       - name: Validate scripts and Python
         run: |
-          python3 -m py_compile desk-sprite/console_server.py scripts/check_release.py
+          python3 -m py_compile desk-sprite/console_server.py scripts/check_release.py scripts/generate_readme_locales.py
           python3 -m unittest discover -s desk-sprite/tests -v
           bash -n desk-sprite/launch.sh desk-sprite/start_console.sh desk-sprite/halt.sh desk-sprite/health.sh
-          zsh -n 启动桌面精灵.command 重启桌面精灵.command 停止桌面精灵.command
+          zsh -n start-desk-pet.command restart-desk-pet.command stop-desk-pet.command
 
       - name: Build Swift package
         run: swift build --package-path desk-sprite
