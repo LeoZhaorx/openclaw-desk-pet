@@ -17,10 +17,14 @@ desk-sprite/.console.pid
 *.log
 *.pid
 
+# Python bytecode
+__pycache__/
+*.py[cod]
+
 # Local archives and source-media backups
 *.zip
-media_副本/
-media原尺寸/
+media-backup/
+media-original/
 
 # Local agent notes
 .learnings/

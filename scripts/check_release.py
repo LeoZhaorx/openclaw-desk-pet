@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MAX_GITHUB_FILE_BYTES = 100 * 1024 * 1024
 WARN_FILE_BYTES = 50 * 1024 * 1024
-FORBIDDEN_PARTS = {".DS_Store", ".build", "__MACOSX", "media_副本", "media原尺寸"}
+FORBIDDEN_PARTS = {".DS_Store", ".build", "__MACOSX", "media-backup", "media-original"}
 FORBIDDEN_SUFFIXES = {".log", ".pid", ".zip", ".pem", ".p12"}
 TEXT_SECRET_PATTERNS = {
     "private key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
