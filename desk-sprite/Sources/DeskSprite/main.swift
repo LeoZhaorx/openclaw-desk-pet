@@ -3363,6 +3363,7 @@ struct NativeGlassCapsule: NSViewRepresentable {
             return effect
         }
 
+        #if compiler(>=6.2)
         if #available(macOS 26.0, *) {
             let glass = NSGlassEffectView()
             glass.cornerRadius = cornerRadius
@@ -3370,6 +3371,7 @@ struct NativeGlassCapsule: NSViewRepresentable {
             glass.tintColor = NSColor.black.withAlphaComponent(tintOpacity)
             return glass
         }
+        #endif
 
         let effect = NSVisualEffectView()
         effect.material = .hudWindow
@@ -3398,12 +3400,14 @@ struct NativeGlassCapsule: NSViewRepresentable {
             return
         }
 
+        #if compiler(>=6.2)
         if #available(macOS 26.0, *), let glass = nsView as? NSGlassEffectView {
             glass.cornerRadius = cornerRadius
             glass.style = .regular
             glass.tintColor = NSColor.black.withAlphaComponent(tintOpacity)
             return
         }
+        #endif
 
         if let effect = nsView as? NSVisualEffectView {
             effect.material = .hudWindow
