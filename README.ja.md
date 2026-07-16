@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/readme/mascot-command.jpg" alt="OpenClaw に乗って前を指すプロジェクトの猫" width="132">
+<img src="docs/assets/readme/mascot-command.png" alt="OpenClaw に乗って前を指すプロジェクトの猫" width="132">
 
 # 🐈 OpenClaw Desk Pet
 

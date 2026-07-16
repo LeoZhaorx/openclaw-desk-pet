@@ -16,7 +16,7 @@ This directory contains the publish-ready visuals used by the multilingual READM
 
 ## Preserved source material
 
-- `mascot-command.jpg` is an identity-preserving ImageGen composition of the project cat riding and pointing from the official OpenClaw mascot.
+- `mascot-command.png` is the identity-preserving mascot composition with the four areas outside its rounded-square plate removed to transparency. The cat, OpenClaw mascot, lighting, and all pixels inside the rounded boundary remain sourced from the original project icon.
 - `openclaw-icon.jpg` is an optimized export of the official OpenClaw macOS icon. It is not redrawn or AI-generated.
 - `inspiration-real-cat.jpg` is cropped from the owner-supplied real-life cat photo. It was re-encoded without EXIF, GPS coordinates, device information, or capture time.
 - `demo-task.gif`, `demo-text.gif`, and `demo-sleep.gif` were exported from real product recordings supplied by the project owner.
@@ -34,8 +34,12 @@ Use case: ads-marketing. Asset type: text-free GitHub README hero banner, 16:9 l
 
 Use case: infographic-diagram. Asset type: text-free GitHub README relationship banner. Create a warm, light, designer-crafted functional illustration. Place the official red OpenClaw mascot on the left and the exact project cat on the right. Connect them with a coral state-event flow toward the cat and a muted-blue task-input flow back toward OpenClaw. Add a few abstract, non-text symbols suggesting terminal work, web access, branching tasks, tool activity, and completion. Keep the layout clear, friendly, balanced, and editorial on an ivory background. No text, letters, labels, cards containing copy, UI screenshots, neon, dark cyberpunk styling, or watermark.
 
+### Rounded mascot transparency
+
+Use case: background-extraction. Change only the four square corner areas outside the existing rounded-square icon plate to a removable flat chroma-key background. Preserve the cat, OpenClaw mascot, pose, lighting, proportions, and all content inside the rounded boundary. The final tracked PNG uses the untouched original icon pixels with a deterministic antialiased alpha mask, preventing generative changes to the project cat.
+
 ## Export notes
 
-- Banners, console illustrations, the real cat photo, mascot images, and product stills are optimized JPEG files.
+- Banners, console illustrations, the real cat photo, and product stills are optimized JPEG files. The rounded project mascot is a PNG with alpha transparency.
 - Motion previews are palette-optimized GIF files.
 - Exact explanatory copy remains in Markdown or deterministic localized overlays, never in the generated banners.

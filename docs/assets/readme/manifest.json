@@ -158,13 +158,13 @@
       "sha256": "ca0391289d59a34df31a0a85fab982c6fb802e19062d69e05cd7007a1c54742d"
     },
     {
-      "path": "mascot-command.jpg",
+      "path": "mascot-command.png",
       "role": "project-cat-riding-openclaw-mascot",
-      "source": "Built-in ImageGen identity-preserving composition from the project cat and official OpenClaw mascot",
+      "source": "Identity-preserving mascot composition with a deterministic transparent rounded-corner mask",
       "width": 512,
       "height": 512,
-      "bytes": 50503,
-      "sha256": "c693525ce48dc5247742d1d5e3fcd64760e556c0b73415fcd52f592640194664"
+      "bytes": 290676,
+      "sha256": "448fd82a5f5707ebf3fc3732a947e4e9e42791109b33c2ed7be48ffa7669347c"
     },
     {
       "path": "inspiration-real-cat.jpg",
