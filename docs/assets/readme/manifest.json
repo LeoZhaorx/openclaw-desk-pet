@@ -1,0 +1,134 @@
+{
+  "version": 3,
+  "assets": [
+    {
+      "path": "hero.jpg",
+      "role": "readme-hero",
+      "source": "AI-assisted edit of desk-sprite/console/visuals/art-still.png",
+      "width": 1536,
+      "height": 864,
+      "bytes": 166951,
+      "sha256": "ba90eea51260725ebae58485a430d1ec6385ba51834beac6759610dc78b19a3e"
+    },
+    {
+      "path": "demo-task.gif",
+      "role": "primary-workflow-demo",
+      "source": "启动任务.mov",
+      "width": 320,
+      "height": 577,
+      "duration_seconds": 36.0,
+      "bytes": 1437803,
+      "sha256": "4d23bf15ff0fa6e3f7f81b7e4064156da1231b8532388d14ea1c23a3d779fa73"
+    },
+    {
+      "path": "demo-text.gif",
+      "role": "text-input-demo",
+      "source": "录屏2026-05-07 15.19.46.mov",
+      "width": 320,
+      "height": 577,
+      "duration_seconds": 24.0,
+      "bytes": 1224862,
+      "sha256": "ef677fce268e5147a931fc4f27764786549f77ef0a9d4b5e2ad4ec1260687c23"
+    },
+    {
+      "path": "demo-sleep.gif",
+      "role": "sleep-animation-demo",
+      "source": "已发布：睡觉.mov",
+      "width": 320,
+      "height": 577,
+      "duration_seconds": 11.51,
+      "bytes": 736630,
+      "sha256": "bd37ddfd0c3d58018347134ffe3942aaf70bc7801c749e662579cec2db1faba2"
+    },
+    {
+      "path": "scene-quick-task.jpg",
+      "role": "quick-task-still",
+      "source": "启动任务.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 123321,
+      "sha256": "bbc4da01a3ac07bbb06efa38138a31cde1480816e2204c7ae314b38060adb1a4"
+    },
+    {
+      "path": "scene-subagent.jpg",
+      "role": "subagent-still",
+      "source": "启动任务.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 122506,
+      "sha256": "8bfec4a66539a08aa875d356cbcb2f4ca81c881a27f81d7143134f57445ef68b"
+    },
+    {
+      "path": "scene-tools.jpg",
+      "role": "tool-status-still",
+      "source": "录屏2026-05-07 15.18.56.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 122615,
+      "sha256": "90ad22d658ed95d263af1cef90572258a6df7aa340112dfe2a24d75456faa595"
+    },
+    {
+      "path": "scene-result.jpg",
+      "role": "result-still",
+      "source": "启动任务.mov",
+      "width": 480,
+      "height": 866,
+      "bytes": 129006,
+      "sha256": "2986aaef1304aa77887bf34b7650bc1a3411b513e9248f37a9bd3af1a9b0ab7c"
+    },
+    {
+      "path": "hero-v2.jpg",
+      "role": "readme-hero-v2",
+      "source": "Built-in ImageGen warm editorial background plus real project animation frames and the identity-locked project mascot badge",
+      "width": 1536,
+      "height": 864,
+      "bytes": 233834,
+      "sha256": "87c247db6cca29b145ecf6de9fbc37920708d45381aa77a70c2affb8ed0e8f65"
+    },
+    {
+      "path": "openclaw-desk-pet-flow.jpg",
+      "role": "openclaw-desk-pet-relationship",
+      "source": "Built-in ImageGen background plus deterministic product labels and preserved source assets",
+      "width": 1536,
+      "height": 900,
+      "bytes": 199706,
+      "sha256": "c647c45f93d10f020feb8ea8179ffcfd5f53a4034c89fe97a5f9c14280f013d3"
+    },
+    {
+      "path": "openclaw-icon.jpg",
+      "role": "official-openclaw-icon",
+      "source": "openclaw/openclaw apps/macos/Icon.icon/Assets/openclaw-mac.png",
+      "width": 384,
+      "height": 384,
+      "bytes": 25131,
+      "sha256": "ca0391289d59a34df31a0a85fab982c6fb802e19062d69e05cd7007a1c54742d"
+    },
+    {
+      "path": "config-console.jpg",
+      "role": "sanitized-config-console",
+      "source": "User-supplied real product screenshot with personal workspace path replaced",
+      "width": 1400,
+      "height": 1266,
+      "bytes": 122669,
+      "sha256": "2eb31ca03f01a246e24494596e81ddd85aea5859a05a7ab6b64868fded0896ef"
+    },
+    {
+      "path": "mascot-command.jpg",
+      "role": "project-cat-riding-openclaw-mascot",
+      "source": "Built-in ImageGen identity-preserving composition from art-still.png and the official OpenClaw icon",
+      "width": 512,
+      "height": 512,
+      "bytes": 50503,
+      "sha256": "c693525ce48dc5247742d1d5e3fcd64760e556c0b73415fcd52f592640194664"
+    },
+    {
+      "path": "inspiration-real-cat.jpg",
+      "role": "real-life-inspiration-photo",
+      "source": "IMG_4036.jpeg, cropped and re-encoded without EXIF metadata",
+      "width": 1000,
+      "height": 1250,
+      "bytes": 199283,
+      "sha256": "0dc025cd54aedf94c541876712ae6be9393c10aaa8e2deda130d855181e2e5df"
+    }
+  ]
+}
