@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="docs/assets/readme/openclaw-icon.jpg" alt="OpenClaw icon" width="88">
+<img src="docs/assets/readme/mascot-command.jpg" alt="项目猫骑着 OpenClaw 向前指挥" width="132">
 
 # 🐈 OpenClaw Desk Pet
 
 **把 AI 的工作状态，养成桌面上的猫。**
 
-不用守着日志窗口。猫站起来，任务开始；工具标签冒出来，OpenClaw 正在干活；它重新趴下，这轮任务也差不多收尾了。
+做这个桌宠的原因很简单：我不想为了确认 OpenClaw 还在不在干活，一遍遍切回控制台。现在瞄一眼猫就行——坐着是空闲，起身是开工，抱着手机就是还在忙。
 
 <p>
   <a href="https://github.com/LeoZhaorx/openclaw-desk-pet/actions/workflows/ci.yml"><img src="https://github.com/LeoZhaorx/openclaw-desk-pet/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -18,6 +18,7 @@
 
 <p>
   <a href="#先看它跑一次任务">🎬 先看演示</a> ·
+  <a href="#为什么是一只猫">💡 灵感</a> ·
   <a href="#openclaw-和它怎么配合">🔗 看懂关系</a> ·
   <a href="#配置不用手改控制台统一管理">⚙️ 配置台</a> ·
   <a href="#3-分钟开始使用">🚀 开始使用</a>
@@ -44,6 +45,22 @@
   </tr>
 </table>
 
+## 为什么是一只猫
+
+<table>
+  <tr>
+    <td width="44%" align="center">
+      <img src="docs/assets/readme/inspiration-real-cat.jpg" alt="工作时爬到电脑旁边的真实猫咪" width="420"><br>
+      <sub>真实照片；开源版本已清除拍摄元数据。</sub>
+    </td>
+    <td width="56%" valign="middle">
+      <strong>因为它本来就会来陪我工作。</strong><br><br>
+      我工作的时候，家里的猫经常爬到电脑旁边。有时盯着屏幕，有时干脆靠着电脑躺下。它当然不知道我在跑什么任务，但那种“旁边一直有只猫”的感觉很具体。<br><br>
+      做 OpenClaw Desk Pet 时，我想保留的就是这种陪伴：它不用说话，也不必占一个窗口；抬头看一眼，就知道后台还在不在忙。
+    </td>
+  </tr>
+</table>
+
 ---
 
 ## 先看它跑一次任务
@@ -52,8 +69,6 @@
 
 <div align="center">
   <img src="docs/assets/readme/demo-task.gif" alt="从桌面启动 OpenClaw 任务的真实演示" width="360">
-  <br>
-  <a href="docs/assets/readme/demo-full.mp4">▶ 查看 62 秒完整演示视频</a>
 </div>
 
 这不是预设好的剧情。桌宠会监听 OpenClaw Gateway 的实时事件，并把 `thinking`、工具调用、完成和休眠状态映射成对应动画。

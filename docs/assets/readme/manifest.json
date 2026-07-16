@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "assets": [
     {
       "path": "hero.jpg",
@@ -41,16 +41,6 @@
       "sha256": "bd37ddfd0c3d58018347134ffe3942aaf70bc7801c749e662579cec2db1faba2"
     },
     {
-      "path": "demo-full.mp4",
-      "role": "full-demo-video",
-      "source": "启动任务.mov",
-      "width": 360,
-      "height": 650,
-      "duration_seconds": 62.25,
-      "bytes": 643767,
-      "sha256": "0ef4e98198304c1bfb0d1eacd1865244e03ab75c189a0acb29961f97cce5b07e"
-    },
-    {
       "path": "scene-quick-task.jpg",
       "role": "quick-task-still",
       "source": "启动任务.mov",
@@ -89,11 +79,11 @@
     {
       "path": "hero-v2.jpg",
       "role": "readme-hero-v2",
-      "source": "Built-in ImageGen background plus real project animation frames and official OpenClaw icon",
+      "source": "Built-in ImageGen warm editorial background plus real project animation frames and the identity-locked project mascot badge",
       "width": 1536,
       "height": 864,
-      "bytes": 258217,
-      "sha256": "a800db10744ca6e44f5182a2249a4a12ea83060eb44871c0c4da05a5325e02cd"
+      "bytes": 233834,
+      "sha256": "87c247db6cca29b145ecf6de9fbc37920708d45381aa77a70c2affb8ed0e8f65"
     },
     {
       "path": "openclaw-desk-pet-flow.jpg",
@@ -101,8 +91,8 @@
       "source": "Built-in ImageGen background plus deterministic product labels and preserved source assets",
       "width": 1536,
       "height": 900,
-      "bytes": 226198,
-      "sha256": "2b6cdf9c555d365c905ff3f312325fa6e2726507c45015bae1ebded6a24f593f"
+      "bytes": 199706,
+      "sha256": "c647c45f93d10f020feb8ea8179ffcfd5f53a4034c89fe97a5f9c14280f013d3"
     },
     {
       "path": "openclaw-icon.jpg",
@@ -121,6 +111,24 @@
       "height": 1266,
       "bytes": 122669,
       "sha256": "2eb31ca03f01a246e24494596e81ddd85aea5859a05a7ab6b64868fded0896ef"
+    },
+    {
+      "path": "mascot-command.jpg",
+      "role": "project-cat-riding-openclaw-mascot",
+      "source": "Built-in ImageGen identity-preserving composition from art-still.png and the official OpenClaw icon",
+      "width": 512,
+      "height": 512,
+      "bytes": 50503,
+      "sha256": "c693525ce48dc5247742d1d5e3fcd64760e556c0b73415fcd52f592640194664"
+    },
+    {
+      "path": "inspiration-real-cat.jpg",
+      "role": "real-life-inspiration-photo",
+      "source": "IMG_4036.jpeg, cropped and re-encoded without EXIF metadata",
+      "width": 1000,
+      "height": 1250,
+      "bytes": 199283,
+      "sha256": "0dc025cd54aedf94c541876712ae6be9393c10aaa8e2deda130d855181e2e5df"
     }
   ]
 }
