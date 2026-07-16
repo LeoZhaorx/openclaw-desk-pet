@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeskSprite 控制台</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Outfit", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        --bg-1: #f6f3ed;
+        --bg-2: #eef4f2;
+        --card: #ffffff;
+        --ink: #151a1f;
+        --muted: #5c6874;
+        --line: #d8dde3;
+        --accent: #17a088;
+        --accent-strong: #0d7568;
+        --warn: #c87d2a;
+        --error: #c53d3d;
+        --shadow: 0 22px 60px rgba(20, 24, 28, 0.12);
+        --radius-xl: 22px;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --radius-sm: 10px;
+        --radius-pill: 999px;
+        --space-1: 6px;
+        --space-2: 10px;
+        --space-3: 14px;
+        --space-4: 18px;
+        --space-5: 24px;
+        --space-6: 32px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background:
+          radial-gradient(1100px 600px at -10% -20%, rgba(23, 160, 136, 0.18), transparent 60%),
+          radial-gradient(900px 560px at 110% -10%, rgba(255, 196, 117, 0.25), transparent 55%),
+          linear-gradient(140deg, var(--bg-1), var(--bg-2));
+        padding: clamp(20px, 5vw, 52px) 18px 64px;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: radial-gradient(rgba(21, 26, 31, 0.04) 1px, transparent 0);
+        background-size: 18px 18px;
+        pointer-events: none;
+        opacity: 0.4;
+      }
+
+      .shell {
+        max-width: 980px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-5);
+        position: relative;
+      }
+
+      .hero {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+
+      .hero-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+      }
+
+      .hero-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      .hero-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: var(--radius-pill);
+        background: rgba(23, 160, 136, 0.12);
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 8px rgba(23, 160, 136, 0.6);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(26px, 4vw, 34px);
+        letter-spacing: -0.02em;
+      }
+
+      .sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        max-width: 640px;
+      }
+
+      .panel-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-5);
+      }
+
+      .reload-hint {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(242, 197, 154, 0.8);
+        background: linear-gradient(120deg, rgba(255, 241, 225, 0.9), rgba(255, 252, 247, 0.95));
+        color: #8a4b06;
+        font-weight: 700;
+        font-size: 14px;
+        box-shadow: 0 18px 38px rgba(162, 106, 38, 0.15);
+      }
+
+      .reload-hint[data-active="true"] {
+        display: flex;
+      }
+
+      .reload-hint .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #ff9f2e;
+        box-shadow: 0 0 0 6px rgba(255, 159, 46, 0.18);
+        animation: pulse 1.4s ease-in-out infinite;
+      }
+
+      .reload-hint strong {
+        font-weight: 800;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      .panel {
+        background: var(--card);
+        border-radius: var(--radius-xl);
+        padding: clamp(20px, 4vw, 28px);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle at top right, rgba(23, 160, 136, 0.12), transparent 70%);
+        pointer-events: none;
+      }
+
+      .section-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .section-title h2 {
+        margin: 0;
+        font-size: 16px;
+        letter-spacing: 0.01em;
+      }
+
+      .section-title p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: var(--space-1);
+        font-weight: 600;
+      }
+
+      input {
+        width: 100%;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--line);
+        padding: 12px 14px;
+        font-size: 14px;
+        background: #f9fbfc;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input:focus-visible {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(23, 160, 136, 0.18);
+      }
+
+      .field-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: nowrap;
+      }
+
+      .field-row input {
+        flex: 1 1 auto;
+      }
+
+      .inline-btn {
+        background: #f0f4f4;
+        border: 1px solid #d2d7dd;
+        color: var(--ink);
+        padding: 10px 14px;
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+      }
+
+      .inline-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent-strong);
+        transform: translateY(-1px);
+      }
+
+      .prompt-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .prompt-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 4px;
+        position: relative;
+      }
+
+      .prompt-item.dragging {
+        opacity: 0.4;
+      }
+
+      .prompt-item.drag-over {
+        background: rgba(23, 160, 136, 0.08);
+        border-radius: var(--radius-md);
+      }
+
+      .prompt-item.drag-over-top::before,
+      .prompt-item.drag-over-bottom::after {
+        content: "";
+        position: absolute;
+        left: 44px;
+        right: 12px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 999px;
+      }
+
+      .prompt-item.drag-over-top::before {
+        top: 4px;
+      }
+
+      .prompt-item.drag-over-bottom::after {
+        bottom: 4px;
+      }
+
+      .prompt-item input {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+      }
+
+      .drag-handle {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        color: #8d96a0;
+        background: rgba(23, 160, 136, 0.08);
+        cursor: grab;
+        user-select: none;
+        transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+      }
+
+      .drag-handle:hover {
+        color: var(--accent-strong);
+        background: rgba(23, 160, 136, 0.16);
+        transform: translateY(-1px);
+      }
+
+      .drag-handle:active {
+        cursor: grabbing;
+        transform: translateY(0);
+      }
+
+      .drag-handle svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+        stroke: currentColor;
+        fill: none;
+      }
+
+      .prompt-empty {
+        border: 1px dashed #d6dde4;
+        border-radius: var(--radius-md);
+        padding: 14px;
+        color: var(--muted);
+        font-size: 13px;
+        background: #f9fbfc;
+      }
+
+      .icon-btn {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        color: #6b7580;
+        cursor: pointer;
+        transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+      }
+
+      .icon-btn:hover {
+        color: var(--accent-strong);
+        background: rgba(23, 160, 136, 0.12);
+        transform: translateY(-1px);
+      }
+
+      .icon-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .icon-btn svg {
+        width: 14px;
+        height: 14px;
+        display: block;
+        stroke: currentColor;
+        fill: none;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      button {
+        border: none;
+        border-radius: var(--radius-md);
+        padding: 12px 18px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      }
+
+      button.icon-btn {
+        padding: 0;
+        font-size: 0;
+        line-height: 0;
+        box-shadow: none;
+      }
+
+      .primary {
+        background: var(--ink);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(23, 28, 35, 0.2);
+      }
+
+      .ghost {
+        background: #fff;
+        border: 1px solid #d2d7dd;
+        color: var(--ink);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .status {
+        font-size: 13px;
+        min-height: 18px;
+      }
+
+      .status--ok {
+        color: var(--accent-strong);
+      }
+
+      .status--warn {
+        color: var(--warn);
+      }
+
+      .status--error {
+        color: var(--error);
+      }
+
+      .loading-mask {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .loading-mask span {
+        padding: 10px 18px;
+        border-radius: var(--radius-pill);
+        background: #fff;
+        border: 1px solid #e2e7ec;
+        font-size: 12px;
+        color: var(--muted);
+        box-shadow: 0 8px 24px rgba(20, 24, 28, 0.08);
+      }
+
+      body[data-loading="true"] .loading-mask {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body data-loading="true">
+    <div class="loading-mask"><span>正在读取配置…</span></div>
+
+    <div class="shell">
+      <header class="hero">
+        <div class="hero-row">
+          <div class="hero-content">
+            <div class="hero-top">
+              <span class="badge"><span class="badge-dot"></span> 配置中心</span>
+            </div>
+            <h1>DeskSprite 控制台</h1>
+            <p class="sub">把配置集中在一处管理：OpenClaw 路径、网关，以及快捷按钮。修改会自动保存，点击重新载入即可生效。</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="reload-hint" id="reloadHint" data-active="false">
+        <span class="dot" aria-hidden="true"></span>
+        设置已自动保存，但尚未重新载入。请点击下方 <strong>重新载入</strong> 让精灵立即生效。
+      </div>
+
+      <div class="panel-stack">
+        <section class="panel">
+          <div class="section-title">
+            <h2>基础配置</h2>
+            <p>确保目录包含 <code>openclaw.json</code> 与 <code>agents/main/sessions</code>。</p>
+          </div>
+
+          <div>
+            <label for="root">OpenClaw 状态目录（OPENCLAW_ROOT）</label>
+            <div class="field-row">
+              <input id="root" placeholder="/path/to/Openclaw_Workspace" spellcheck="false" autocapitalize="off" />
+              <button class="inline-btn" id="pickRootBtn" type="button">选择目录</button>
+            </div>
+          </div>
+
+          <div>
+            <label for="gateway">网关地址（OPENCLAW_GATEWAY_URL）</label>
+            <input id="gateway" placeholder="ws://127.0.0.1:18789" spellcheck="false" />
+          </div>
+
+          <div>
+            <label for="token">网关 Token（可选）</label>
+            <input id="token" type="password" autocomplete="new-password" placeholder="留空则自动从 OpenClaw 配置读取" spellcheck="false" />
+          </div>
+
+          <div>
+            <label for="startScript">启动脚本（可选）</label>
+            <input id="startScript" placeholder="/absolute/path/to/start-openclaw.command" spellcheck="false" autocapitalize="off" />
+          </div>
+
+          <div>
+            <label for="activeWindow">文件回退活跃窗口（秒）</label>
+            <input id="activeWindow" type="number" min="1" max="3600" step="1" placeholder="20" inputmode="numeric" />
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="reloadBtn" type="button">重新载入</button>
+          </div>
+          <div class="status" id="status" aria-live="polite"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>快捷按钮配置</h2>
+            <p>每条按钮文案会同步到精灵端，修改会自动保存，点击重新载入生效。拖拽左侧手柄可调整顺序。</p>
+          </div>
+
+          <div class="prompt-list" id="promptList"></div>
+          <div class="actions">
+            <button class="ghost" id="addPromptBtn" type="button">新增按钮</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const rootInput = document.getElementById("root");
+      const gatewayInput = document.getElementById("gateway");
+      const tokenInput = document.getElementById("token");
+      const startScriptInput = document.getElementById("startScript");
+      const activeWindowInput = document.getElementById("activeWindow");
+      const status = document.getElementById("status");
+      const reloadBtn = document.getElementById("reloadBtn");
+      const pickRootBtn = document.getElementById("pickRootBtn");
+      const promptList = document.getElementById("promptList");
+      const addPromptBtn = document.getElementById("addPromptBtn");
+      const reloadHint = document.getElementById("reloadHint");
+
+      let promptState = [];
+      let isSaving = false;
+      let autosaveTimer = null;
+      let needsReload = false;
+      let pendingSave = false;
+      let draggingIndex = null;
+
+      function setLoading(isLoading, message = "正在读取配置…") {
+        document.body.dataset.loading = isLoading ? "true" : "false";
+        const mask = document.querySelector(".loading-mask span");
+        if (mask) mask.textContent = message;
+        reloadBtn.disabled = isLoading;
+        pickRootBtn.disabled = isLoading;
+        addPromptBtn.disabled = isLoading;
+      }
+
+      function setStatus(type, message) {
+        status.className = `status status--${type}`;
+        status.textContent = message || "";
+      }
+
+      function setNeedsReload(value) {
+        needsReload = value;
+        if (reloadHint) {
+          reloadHint.dataset.active = value ? "true" : "false";
+        }
+      }
+
+      function scheduleAutoSave() {
+        if (autosaveTimer) clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(() => {
+          if (isSaving) {
+            pendingSave = true;
+            return;
+          }
+          saveConfig();
+        }, 500);
+      }
+
+      const icons = {
+        drag: '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="1.5"/><circle cx="15" cy="7" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="17" r="1.5"/><circle cx="15" cy="17" r="1.5"/></svg>',
+        trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/></svg>'
+      };
+
+      function iconButton(type, onClick, disabled = false) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "icon-btn";
+        btn.innerHTML = icons[type] || "";
+        btn.disabled = disabled;
+        btn.onclick = onClick;
+        return btn;
+      }
+
+      function renderPromptList() {
+        promptList.innerHTML = "";
+        if (!promptState.length) {
+          const empty = document.createElement("div");
+          empty.className = "prompt-empty";
+          empty.textContent = "暂无按钮，点击“新增按钮”开始配置。";
+          promptList.appendChild(empty);
+          return;
+        }
+        promptState.forEach((text, index) => {
+          const row = document.createElement("div");
+          row.className = "prompt-item";
+          row.dataset.index = String(index);
+          row.addEventListener("dragover", handleDragOver);
+          row.addEventListener("dragleave", handleDragLeave);
+          row.addEventListener("drop", handleDrop);
+          const handle = document.createElement("div");
+          handle.className = "drag-handle";
+          handle.setAttribute("draggable", "true");
+          handle.setAttribute("title", "拖拽排序");
+          handle.innerHTML = icons.drag || "";
+          handle.addEventListener("dragstart", (event) => handleDragStart(event, index));
+          handle.addEventListener("dragend", handleDragEnd);
+          const input = document.createElement("input");
+          input.value = text || "";
+          input.placeholder = "输入按钮文案";
+          input.addEventListener("input", (event) => {
+            promptState[index] = event.target.value;
+            scheduleAutoSave();
+          });
+          const delBtn = iconButton("trash", () => removePrompt(index));
+          row.appendChild(handle);
+          row.appendChild(input);
+          row.appendChild(delBtn);
+          promptList.appendChild(row);
+        });
+      }
+
+      function handleDragStart(event, index) {
+        draggingIndex = index;
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", String(index));
+        const row = event.target.closest(".prompt-item");
+        if (row) row.classList.add("dragging");
+      }
+
+      function handleDragEnd(event) {
+        const row = event.target.closest(".prompt-item");
+        if (row) row.classList.remove("dragging");
+        clearDragOver();
+        draggingIndex = null;
+      }
+
+      function handleDragOver(event) {
+        event.preventDefault();
+        const row = event.currentTarget;
+        if (!row) return;
+        clearDragOver();
+        const rect = row.getBoundingClientRect();
+        const before = event.clientY < rect.top + rect.height / 2;
+        row.classList.add("drag-over", before ? "drag-over-top" : "drag-over-bottom");
+        row.dataset.dropPosition = before ? "before" : "after";
+        event.dataTransfer.dropEffect = "move";
+      }
+
+      function handleDragLeave(event) {
+        const row = event.currentTarget;
+        if (!row) return;
+        row.classList.remove("drag-over", "drag-over-top", "drag-over-bottom");
+        row.dataset.dropPosition = "";
+      }
+
+      function handleDrop(event) {
+        event.preventDefault();
+        const row = event.currentTarget;
+        if (!row) return;
+        row.classList.remove("drag-over", "drag-over-top", "drag-over-bottom");
+        const fromIndex = draggingIndex ?? Number(event.dataTransfer.getData("text/plain"));
+        const toIndex = Number(row.dataset.index || "-1");
+        const position = row.dataset.dropPosition === "after" ? "after" : "before";
+        if (!Number.isFinite(fromIndex) || !Number.isFinite(toIndex) || fromIndex === toIndex) return;
+        movePromptTo(fromIndex, toIndex, position);
+        renderPromptList();
+        scheduleAutoSave();
+      }
+
+      function movePromptTo(fromIndex, toIndex, position) {
+        if (fromIndex === toIndex && position === "before") return;
+        const moved = promptState.splice(fromIndex, 1)[0];
+        let targetIndex = toIndex + (position === "after" ? 1 : 0);
+        if (fromIndex < targetIndex) targetIndex -= 1;
+        if (targetIndex < 0) targetIndex = 0;
+        if (targetIndex > promptState.length) targetIndex = promptState.length;
+        promptState.splice(targetIndex, 0, moved);
+      }
+
+      function clearDragOver() {
+        document.querySelectorAll(".prompt-item.drag-over, .prompt-item.drag-over-top, .prompt-item.drag-over-bottom").forEach((node) => {
+          node.classList.remove("drag-over", "drag-over-top", "drag-over-bottom");
+          node.dataset.dropPosition = "";
+        });
+      }
+
+      function removePrompt(index) {
+        promptState.splice(index, 1);
+        renderPromptList();
+        scheduleAutoSave();
+      }
+
+      function collectPrompts() {
+        return promptState.map((text) => text.trim()).filter(Boolean);
+      }
+
+      function applyConfig(data) {
+        rootInput.value = data.config.OPENCLAW_ROOT || "";
+        gatewayInput.value = data.config.OPENCLAW_GATEWAY_URL || "";
+        tokenInput.value = data.config.OPENCLAW_GATEWAY_TOKEN || "";
+        startScriptInput.value = data.config.OPENCLAW_START_SCRIPT || "";
+        activeWindowInput.value = data.config.OPENCLAW_ACTIVE_WINDOW_SECONDS || "";
+        promptState = Array.isArray(data.quickPrompts) ? data.quickPrompts.slice() : [];
+        renderPromptList();
+        setNeedsReload(false);
+      }
+
+      async function loadConfig() {
+        try {
+          setLoading(true, "正在读取配置…");
+          const res = await fetch("/api/config");
+          if (!res.ok) throw new Error("无法读取配置");
+          const data = await res.json();
+          applyConfig(data);
+          setStatus("ok", "配置已载入。修改会自动保存。");
+        } catch (err) {
+          setStatus("error", "读取失败，请检查后台服务是否运行。");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      async function saveConfig() {
+        const rootValue = rootInput.value.trim();
+        if (!rootValue) {
+          setStatus("error", "请填写 OpenClaw 状态目录，系统才能自动保存。");
+          rootInput.focus();
+          return;
+        }
+        const payload = {
+          config: {
+            OPENCLAW_ROOT: rootValue,
+            OPENCLAW_GATEWAY_URL: gatewayInput.value.trim(),
+            OPENCLAW_GATEWAY_TOKEN: tokenInput.value.trim(),
+            OPENCLAW_START_SCRIPT: startScriptInput.value.trim(),
+            OPENCLAW_ACTIVE_WINDOW_SECONDS: activeWindowInput.value.trim(),
+          },
+          quickPrompts: collectPrompts(),
+        };
+        try {
+          if (isSaving) return;
+          isSaving = true;
+          setStatus("warn", "正在自动保存…");
+          const res = await fetch("/api/config", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error("保存失败");
+          setStatus("ok", "已自动保存。请点击重新载入让设置生效。");
+          setNeedsReload(true);
+        } catch (err) {
+          setStatus("error", "自动保存失败，请检查权限或稍后重试。");
+        } finally {
+          isSaving = false;
+          if (pendingSave) {
+            pendingSave = false;
+            scheduleAutoSave();
+          }
+        }
+      }
+
+      reloadBtn.addEventListener("click", async () => {
+        try {
+          setLoading(true, "正在重新载入桌面精灵…");
+          const res = await fetch("/api/restart", { method: "POST" });
+          const data = await res.json();
+          if (!data.ok) throw new Error("restart failed");
+          setStatus("ok", "已触发重新载入。设置将在重启后生效。");
+          setNeedsReload(false);
+        } catch (err) {
+          setStatus("error", "重新载入失败，请稍后重试。");
+        } finally {
+          setLoading(false);
+        }
+      });
+      rootInput.addEventListener("input", scheduleAutoSave);
+      gatewayInput.addEventListener("input", scheduleAutoSave);
+      tokenInput.addEventListener("input", scheduleAutoSave);
+      startScriptInput.addEventListener("input", scheduleAutoSave);
+      activeWindowInput.addEventListener("input", scheduleAutoSave);
+      pickRootBtn.addEventListener("click", async () => {
+        try {
+          setLoading(true, "正在打开目录选择器…");
+          const res = await fetch("/api/pick-root", { method: "POST" });
+          const data = await res.json();
+          if (data.ok && data.path) {
+            rootInput.value = data.path;
+            scheduleAutoSave();
+          } else {
+            setStatus("error", "未选择目录或被取消。");
+          }
+        } catch (err) {
+          setStatus("error", "无法打开选择器，请稍后重试。");
+        } finally {
+          setLoading(false);
+        }
+      });
+      addPromptBtn.addEventListener("click", () => {
+        promptState.push("");
+        renderPromptList();
+        scheduleAutoSave();
+      });
+
+      loadConfig();
+    </script>
+  </body>
+</html>

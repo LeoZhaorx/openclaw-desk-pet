@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Validate scripts and Python
+        run: |
+          python3 -m py_compile desk-sprite/console_server.py scripts/check_release.py
+          python3 -m unittest discover -s desk-sprite/tests -v
+          bash -n desk-sprite/launch.sh desk-sprite/start_console.sh desk-sprite/halt.sh desk-sprite/health.sh
+          zsh -n 启动桌面精灵.command 重启桌面精灵.command 停止桌面精灵.command
+
+      - name: Build Swift package
+        run: swift build --package-path desk-sprite
+
+      - name: Audit publishable files
+        run: python3 scripts/check_release.py

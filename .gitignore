@@ -1,0 +1,26 @@
+# macOS metadata
+.DS_Store
+**/.DS_Store
+__MACOSX/
+
+# SwiftPM / Xcode build output
+desk-sprite/.build/
+desk-sprite/.swiftpm/
+DerivedData/
+*.xcuserstate
+
+# Local runtime configuration and state
+desk-sprite/.desk-sprite.env
+desk-sprite/.desk-sprite.log
+desk-sprite/.console.log
+desk-sprite/.console.pid
+*.log
+*.pid
+
+# Local archives and source-media backups
+*.zip
+media_副本/
+media原尺寸/
+
+# Local agent notes
+.learnings/
