@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2317a088'/%3E%3Cpath d='M17 29 20 16l10 8h4l10-8 3 13v15c0 7-7 12-15 12S17 51 17 44V29Z' fill='white'/%3E%3Ccircle cx='26' cy='36' r='2.5' fill='%23151a1f'/%3E%3Ccircle cx='38' cy='36' r='2.5' fill='%23151a1f'/%3E%3Cpath d='M29 43h6l-3 3-3-3Z' fill='%23151a1f'/%3E%3C/svg%3E" />
     <title>DeskSprite 控制台</title>
     <style>
       :root {
@@ -91,6 +92,74 @@
         flex-wrap: wrap;
         align-items: center;
         gap: var(--space-2);
+      }
+
+      .language-switcher {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 8px 6px 12px;
+        border: 1px solid rgba(21, 26, 31, 0.1);
+        border-radius: var(--radius-pill);
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 8px 24px rgba(20, 24, 28, 0.06);
+        backdrop-filter: blur(12px);
+      }
+
+      .language-switcher label {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        border-radius: 50%;
+        color: var(--accent-strong);
+        background: rgba(23, 160, 136, 0.12);
+      }
+
+      .language-switcher label svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .language-switcher select {
+        appearance: none;
+        min-width: 164px;
+        border: 0;
+        border-radius: var(--radius-pill);
+        padding: 7px 30px 7px 12px;
+        color: var(--ink);
+        background:
+          linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 14px) 50% / 5px 5px no-repeat,
+          linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 9px) 50% / 5px 5px no-repeat,
+          #f4f7f6;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .language-switcher select:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(23, 160, 136, 0.2);
       }
 
       .badge {
@@ -341,6 +410,12 @@
         transform: translateY(0);
       }
 
+      .drag-handle:focus-visible,
+      button:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(23, 160, 136, 0.2);
+      }
+
       .drag-handle svg {
         width: 16px;
         height: 16px;
@@ -479,6 +554,32 @@
         pointer-events: auto;
       }
 
+      @media (max-width: 640px) {
+        body {
+          padding-inline: 12px;
+        }
+
+        .hero-row,
+        .language-switcher {
+          width: 100%;
+        }
+
+        .language-switcher select {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .field-row {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .inline-btn,
+        .actions button {
+          min-height: 44px;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         * {
           animation: none !important;
@@ -488,76 +589,91 @@
     </style>
   </head>
   <body data-loading="true">
-    <div class="loading-mask"><span>正在读取配置…</span></div>
+    <div class="loading-mask"><span data-i18n="loadingRead">正在读取配置…</span></div>
 
     <div class="shell">
       <header class="hero">
         <div class="hero-row">
           <div class="hero-content">
             <div class="hero-top">
-              <span class="badge"><span class="badge-dot"></span> 配置中心</span>
+              <span class="badge"><span class="badge-dot"></span><span data-i18n="badge">配置中心</span></span>
             </div>
-            <h1>DeskSprite 控制台</h1>
-            <p class="sub">把配置集中在一处管理：OpenClaw 路径、网关，以及快捷按钮。修改会自动保存，点击重新载入即可生效。</p>
+            <h1 data-i18n="heading">DeskSprite 控制台</h1>
+            <p class="sub" data-i18n="subtitle">把配置集中在一处管理：OpenClaw 路径、网关，以及快捷按钮。修改会自动保存，点击重新载入即可生效。</p>
+          </div>
+          <div class="language-switcher">
+            <label for="languageSelect">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path>
+              </svg>
+              <span class="visually-hidden" data-i18n="languageLabel">语言</span>
+            </label>
+            <select id="languageSelect" aria-label="语言">
+              <option value="zh-CN">🇨🇳 中文（简体）</option>
+              <option value="zh-TW">🇨🇳 中文（繁體）</option>
+              <option value="en">🇺🇸 English</option>
+              <option value="ja">🇯🇵 日本語</option>
+            </select>
           </div>
         </div>
       </header>
 
       <div class="reload-hint" id="reloadHint" data-active="false">
         <span class="dot" aria-hidden="true"></span>
-        设置已自动保存，但尚未重新载入。请点击下方 <strong>重新载入</strong> 让精灵立即生效。
+        <span data-i18n-html="reloadHint">设置已自动保存，但尚未重新载入。请点击下方 <strong>重新载入</strong> 让精灵立即生效。</span>
       </div>
 
       <div class="panel-stack">
         <section class="panel">
           <div class="section-title">
-            <h2>基础配置</h2>
-            <p>确保目录包含 <code>openclaw.json</code> 与 <code>agents/main/sessions</code>。</p>
+            <h2 data-i18n="basicTitle">基础配置</h2>
+            <p data-i18n-html="basicDescription">确保目录包含 <code>openclaw.json</code> 与 <code>agents/main/sessions</code>。</p>
           </div>
 
           <div>
-            <label for="root">OpenClaw 状态目录（OPENCLAW_ROOT）</label>
+            <label for="root" data-i18n="rootLabel">OpenClaw 状态目录（OPENCLAW_ROOT）</label>
             <div class="field-row">
               <input id="root" placeholder="/path/to/Openclaw_Workspace" spellcheck="false" autocapitalize="off" />
-              <button class="inline-btn" id="pickRootBtn" type="button">选择目录</button>
+              <button class="inline-btn" id="pickRootBtn" type="button" data-i18n="chooseDirectory">选择目录</button>
             </div>
           </div>
 
           <div>
-            <label for="gateway">网关地址（OPENCLAW_GATEWAY_URL）</label>
+            <label for="gateway" data-i18n="gatewayLabel">网关地址（OPENCLAW_GATEWAY_URL）</label>
             <input id="gateway" placeholder="ws://127.0.0.1:18789" spellcheck="false" />
           </div>
 
           <div>
-            <label for="token">网关 Token（可选）</label>
-            <input id="token" type="password" autocomplete="new-password" placeholder="留空则自动从 OpenClaw 配置读取" spellcheck="false" />
+            <label for="token" data-i18n="tokenLabel">网关 Token（可选）</label>
+            <input id="token" type="password" autocomplete="new-password" placeholder="留空则自动从 OpenClaw 配置读取" data-i18n-placeholder="tokenPlaceholder" spellcheck="false" />
           </div>
 
           <div>
-            <label for="startScript">启动脚本（可选）</label>
+            <label for="startScript" data-i18n="startScriptLabel">启动脚本（可选）</label>
             <input id="startScript" placeholder="/absolute/path/to/start-openclaw.command" spellcheck="false" autocapitalize="off" />
           </div>
 
           <div>
-            <label for="activeWindow">文件回退活跃窗口（秒）</label>
+            <label for="activeWindow" data-i18n="activeWindowLabel">文件回退活跃窗口（秒）</label>
             <input id="activeWindow" type="number" min="1" max="3600" step="1" placeholder="20" inputmode="numeric" />
           </div>
 
           <div class="actions">
-            <button class="primary" id="reloadBtn" type="button">重新载入</button>
+            <button class="primary" id="reloadBtn" type="button" data-i18n="reloadButton">重新载入</button>
           </div>
           <div class="status" id="status" aria-live="polite"></div>
         </section>
 
         <section class="panel">
           <div class="section-title">
-            <h2>快捷按钮配置</h2>
-            <p>每条按钮文案会同步到精灵端，修改会自动保存，点击重新载入生效。拖拽左侧手柄可调整顺序。</p>
+            <h2 data-i18n="promptTitle">快捷按钮配置</h2>
+            <p data-i18n="promptDescription">每条按钮文案会同步到精灵端，修改会自动保存，点击重新载入生效。拖拽左侧手柄可调整顺序。</p>
           </div>
 
           <div class="prompt-list" id="promptList"></div>
           <div class="actions">
-            <button class="ghost" id="addPromptBtn" type="button">新增按钮</button>
+            <button class="ghost" id="addPromptBtn" type="button" data-i18n="addPrompt">新增按钮</button>
           </div>
         </section>
       </div>
@@ -575,6 +691,217 @@
       const promptList = document.getElementById("promptList");
       const addPromptBtn = document.getElementById("addPromptBtn");
       const reloadHint = document.getElementById("reloadHint");
+      const languageSelect = document.getElementById("languageSelect");
+
+      const translations = {
+        "zh-CN": {
+          pageTitle: "DeskSprite 控制台",
+          badge: "配置中心",
+          heading: "DeskSprite 控制台",
+          subtitle: "把配置集中在一处管理：OpenClaw 路径、网关，以及快捷按钮。修改会自动保存，点击重新载入即可生效。",
+          languageLabel: "语言",
+          reloadHint: "设置已自动保存，但尚未重新载入。请点击下方 <strong>重新载入</strong> 让精灵立即生效。",
+          basicTitle: "基础配置",
+          basicDescription: "确保目录包含 <code>openclaw.json</code> 与 <code>agents/main/sessions</code>。",
+          rootLabel: "OpenClaw 状态目录（OPENCLAW_ROOT）",
+          chooseDirectory: "选择目录",
+          gatewayLabel: "网关地址（OPENCLAW_GATEWAY_URL）",
+          tokenLabel: "网关 Token（可选）",
+          tokenPlaceholder: "留空则自动从 OpenClaw 配置读取",
+          startScriptLabel: "启动脚本（可选）",
+          activeWindowLabel: "文件回退活跃窗口（秒）",
+          reloadButton: "重新载入",
+          promptTitle: "快捷按钮配置",
+          promptDescription: "每条按钮文案会同步到精灵端，修改会自动保存，点击重新载入生效。拖拽左侧手柄可调整顺序。",
+          addPrompt: "新增按钮",
+          loadingRead: "正在读取配置…",
+          loadingRestart: "正在重新载入桌面精灵…",
+          loadingPicker: "正在打开目录选择器…",
+          emptyPrompts: "暂无按钮，点击“新增按钮”开始配置。",
+          dragSort: "拖拽排序",
+          promptInputLabel: "快捷按钮文案",
+          promptPlaceholder: "输入按钮文案",
+          deletePrompt: "删除按钮",
+          configLoaded: "配置已载入。修改会自动保存。",
+          configLoadError: "读取失败，请检查后台服务是否运行。",
+          rootRequired: "请填写 OpenClaw 状态目录，系统才能自动保存。",
+          saving: "正在自动保存…",
+          saved: "已自动保存。请点击重新载入让设置生效。",
+          saveError: "自动保存失败，请检查权限或稍后重试。",
+          restarted: "已触发重新载入。设置将在重启后生效。",
+          restartError: "重新载入失败，请稍后重试。",
+          pickerCancelled: "未选择目录或已取消。",
+          pickerError: "无法打开选择器，请稍后重试。",
+          languageSynced: "语言偏好已保存，无需重新载入。",
+          languageSaveError: "语言同步失败，请稍后重试。"
+        },
+        "zh-TW": {
+          pageTitle: "DeskSprite 控制台",
+          badge: "設定中心",
+          heading: "DeskSprite 控制台",
+          subtitle: "集中管理 OpenClaw 路徑、閘道與快捷按鈕。修改會自動儲存，點擊重新載入即可生效。",
+          languageLabel: "語言",
+          reloadHint: "設定已自動儲存，但尚未重新載入。請點擊下方 <strong>重新載入</strong>，讓精靈立即套用。",
+          basicTitle: "基本設定",
+          basicDescription: "請確認目錄包含 <code>openclaw.json</code> 與 <code>agents/main/sessions</code>。",
+          rootLabel: "OpenClaw 狀態目錄（OPENCLAW_ROOT）",
+          chooseDirectory: "選擇目錄",
+          gatewayLabel: "閘道位址（OPENCLAW_GATEWAY_URL）",
+          tokenLabel: "閘道 Token（選填）",
+          tokenPlaceholder: "留空將自動從 OpenClaw 設定讀取",
+          startScriptLabel: "啟動指令稿（選填）",
+          activeWindowLabel: "檔案回退有效時間（秒）",
+          reloadButton: "重新載入",
+          promptTitle: "快捷按鈕設定",
+          promptDescription: "每條按鈕文字會同步至精靈端。修改會自動儲存，重新載入後生效；拖曳左側把手可調整順序。",
+          addPrompt: "新增按鈕",
+          loadingRead: "正在讀取設定…",
+          loadingRestart: "正在重新載入桌面精靈…",
+          loadingPicker: "正在開啟目錄選擇器…",
+          emptyPrompts: "目前沒有按鈕，點擊「新增按鈕」開始設定。",
+          dragSort: "拖曳排序",
+          promptInputLabel: "快捷按鈕文字",
+          promptPlaceholder: "輸入按鈕文字",
+          deletePrompt: "刪除按鈕",
+          configLoaded: "設定已載入，修改會自動儲存。",
+          configLoadError: "讀取失敗，請確認後台服務是否正在執行。",
+          rootRequired: "請填寫 OpenClaw 狀態目錄，系統才能自動儲存。",
+          saving: "正在自動儲存…",
+          saved: "已自動儲存，請點擊重新載入以套用設定。",
+          saveError: "自動儲存失敗，請檢查權限或稍後再試。",
+          restarted: "已觸發重新載入，設定將在重啟後生效。",
+          restartError: "重新載入失敗，請稍後再試。",
+          pickerCancelled: "未選擇目錄或已取消。",
+          pickerError: "無法開啟選擇器，請稍後再試。",
+          languageSynced: "語言偏好已儲存，無需重新載入。",
+          languageSaveError: "語言同步失敗，請稍後再試。"
+        },
+        en: {
+          pageTitle: "DeskSprite Console",
+          badge: "Configuration",
+          heading: "DeskSprite Console",
+          subtitle: "Manage the OpenClaw path, gateway, and quick actions in one place. Changes are saved automatically and take effect after reloading.",
+          languageLabel: "Language",
+          reloadHint: "Your changes are saved but not yet active. Select <strong>Reload</strong> below to apply them to DeskSprite.",
+          basicTitle: "Basic settings",
+          basicDescription: "Make sure the folder contains <code>openclaw.json</code> and <code>agents/main/sessions</code>.",
+          rootLabel: "OpenClaw state folder (OPENCLAW_ROOT)",
+          chooseDirectory: "Choose folder",
+          gatewayLabel: "Gateway URL (OPENCLAW_GATEWAY_URL)",
+          tokenLabel: "Gateway token (optional)",
+          tokenPlaceholder: "Leave blank to read it from the OpenClaw configuration",
+          startScriptLabel: "Start script (optional)",
+          activeWindowLabel: "File fallback active window (seconds)",
+          reloadButton: "Reload",
+          promptTitle: "Quick actions",
+          promptDescription: "Each action is synced to DeskSprite. Changes save automatically and apply after reloading. Drag the handle to reorder.",
+          addPrompt: "Add action",
+          loadingRead: "Loading configuration…",
+          loadingRestart: "Reloading DeskSprite…",
+          loadingPicker: "Opening folder picker…",
+          emptyPrompts: "No actions yet. Select “Add action” to create one.",
+          dragSort: "Drag to reorder",
+          promptInputLabel: "Quick action text",
+          promptPlaceholder: "Enter action text",
+          deletePrompt: "Delete action",
+          configLoaded: "Configuration loaded. Changes save automatically.",
+          configLoadError: "Could not load the configuration. Check that the console service is running.",
+          rootRequired: "Enter the OpenClaw state folder to enable automatic saving.",
+          saving: "Saving automatically…",
+          saved: "Saved automatically. Select Reload to apply your changes.",
+          saveError: "Automatic save failed. Check permissions or try again later.",
+          restarted: "Reload started. Your settings will apply after DeskSprite restarts.",
+          restartError: "Reload failed. Please try again later.",
+          pickerCancelled: "No folder was selected.",
+          pickerError: "Could not open the folder picker. Please try again later.",
+          languageSynced: "Language preference saved. No reload is needed.",
+          languageSaveError: "Could not sync the language. Please try again later."
+        },
+        ja: {
+          pageTitle: "DeskSprite コンソール",
+          badge: "設定センター",
+          heading: "DeskSprite コンソール",
+          subtitle: "OpenClaw のパス、ゲートウェイ、クイックボタンをまとめて管理します。変更は自動保存され、再読み込み後に反映されます。",
+          languageLabel: "言語",
+          reloadHint: "設定は自動保存されましたが、まだ反映されていません。下の <strong>再読み込み</strong> をクリックしてください。",
+          basicTitle: "基本設定",
+          basicDescription: "フォルダーに <code>openclaw.json</code> と <code>agents/main/sessions</code> が含まれていることを確認してください。",
+          rootLabel: "OpenClaw 状態フォルダー（OPENCLAW_ROOT）",
+          chooseDirectory: "フォルダーを選択",
+          gatewayLabel: "ゲートウェイ URL（OPENCLAW_GATEWAY_URL）",
+          tokenLabel: "ゲートウェイ Token（任意）",
+          tokenPlaceholder: "空欄の場合は OpenClaw の設定から自動的に読み込みます",
+          startScriptLabel: "起動スクリプト（任意）",
+          activeWindowLabel: "ファイルフォールバックの有効時間（秒）",
+          reloadButton: "再読み込み",
+          promptTitle: "クイックボタン設定",
+          promptDescription: "各ボタンのテキストは DeskSprite に同期されます。変更は自動保存され、再読み込み後に反映されます。左のハンドルをドラッグして並べ替えられます。",
+          addPrompt: "ボタンを追加",
+          loadingRead: "設定を読み込んでいます…",
+          loadingRestart: "DeskSprite を再読み込みしています…",
+          loadingPicker: "フォルダー選択画面を開いています…",
+          emptyPrompts: "ボタンはまだありません。「ボタンを追加」から作成できます。",
+          dragSort: "ドラッグして並べ替え",
+          promptInputLabel: "クイックボタンの文言",
+          promptPlaceholder: "ボタンのテキストを入力",
+          deletePrompt: "ボタンを削除",
+          configLoaded: "設定を読み込みました。変更は自動保存されます。",
+          configLoadError: "設定を読み込めませんでした。コンソールサービスが起動しているか確認してください。",
+          rootRequired: "自動保存するには OpenClaw 状態フォルダーを入力してください。",
+          saving: "自動保存しています…",
+          saved: "自動保存しました。再読み込みをクリックして設定を反映してください。",
+          saveError: "自動保存に失敗しました。権限を確認するか、後でもう一度お試しください。",
+          restarted: "再読み込みを開始しました。再起動後に設定が反映されます。",
+          restartError: "再読み込みに失敗しました。後でもう一度お試しください。",
+          pickerCancelled: "フォルダーが選択されていないか、操作がキャンセルされました。",
+          pickerError: "フォルダー選択画面を開けませんでした。後でもう一度お試しください。",
+          languageSynced: "言語設定を保存しました。再読み込みは不要です。",
+          languageSaveError: "言語を同期できませんでした。後でもう一度お試しください。"
+        }
+      };
+
+      const languageStorageKey = "deskSpriteConsoleLanguage";
+
+      function detectLanguage() {
+        const saved = localStorage.getItem(languageStorageKey);
+        if (saved && translations[saved]) return saved;
+        const browserLanguage = navigator.language || "zh-CN";
+        if (/^zh-(TW|HK|MO)/i.test(browserLanguage)) return "zh-TW";
+        if (/^ja/i.test(browserLanguage)) return "ja";
+        if (/^en/i.test(browserLanguage)) return "en";
+        return "zh-CN";
+      }
+
+      let currentLanguage = detectLanguage();
+      let statusState = { type: "", key: "" };
+      let currentLoadingKey = "loadingRead";
+
+      function t(key) {
+        return translations[currentLanguage]?.[key] || translations["zh-CN"][key] || key;
+      }
+
+      function applyLanguage(language, persist = true) {
+        if (!translations[language]) return;
+        currentLanguage = language;
+        document.documentElement.lang = language;
+        document.title = t("pageTitle");
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          node.textContent = t(node.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach((node) => {
+          node.innerHTML = t(node.dataset.i18nHtml);
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+          node.placeholder = t(node.dataset.i18nPlaceholder);
+        });
+        languageSelect.value = language;
+        languageSelect.setAttribute("aria-label", t("languageLabel"));
+        const mask = document.querySelector(".loading-mask span");
+        if (mask) mask.textContent = t(currentLoadingKey);
+        if (statusState.key) setStatus(statusState.type, statusState.key);
+        renderPromptList();
+        if (persist) localStorage.setItem(languageStorageKey, language);
+      }
 
       let promptState = [];
       let isSaving = false;
@@ -582,19 +909,23 @@
       let needsReload = false;
       let pendingSave = false;
       let draggingIndex = null;
+      let languageChangedByUser = false;
+      let languageSaveSequence = 0;
 
-      function setLoading(isLoading, message = "正在读取配置…") {
+      function setLoading(isLoading, messageKey = "loadingRead") {
+        currentLoadingKey = messageKey;
         document.body.dataset.loading = isLoading ? "true" : "false";
         const mask = document.querySelector(".loading-mask span");
-        if (mask) mask.textContent = message;
+        if (mask) mask.textContent = t(messageKey);
         reloadBtn.disabled = isLoading;
         pickRootBtn.disabled = isLoading;
         addPromptBtn.disabled = isLoading;
       }
 
-      function setStatus(type, message) {
+      function setStatus(type, messageKey) {
+        statusState = { type, key: messageKey || "" };
         status.className = `status status--${type}`;
-        status.textContent = message || "";
+        status.textContent = messageKey ? t(messageKey) : "";
       }
 
       function setNeedsReload(value) {
@@ -635,7 +966,7 @@
         if (!promptState.length) {
           const empty = document.createElement("div");
           empty.className = "prompt-empty";
-          empty.textContent = "暂无按钮，点击“新增按钮”开始配置。";
+          empty.textContent = t("emptyPrompts");
           promptList.appendChild(empty);
           return;
         }
@@ -649,18 +980,25 @@
           const handle = document.createElement("div");
           handle.className = "drag-handle";
           handle.setAttribute("draggable", "true");
-          handle.setAttribute("title", "拖拽排序");
+          handle.setAttribute("role", "button");
+          handle.setAttribute("tabindex", "0");
+          handle.setAttribute("title", t("dragSort"));
+          handle.setAttribute("aria-label", `${t("dragSort")} ${index + 1}`);
           handle.innerHTML = icons.drag || "";
           handle.addEventListener("dragstart", (event) => handleDragStart(event, index));
           handle.addEventListener("dragend", handleDragEnd);
+          handle.addEventListener("keydown", (event) => movePromptByKeyboard(event, index));
           const input = document.createElement("input");
           input.value = text || "";
-          input.placeholder = "输入按钮文案";
+          input.placeholder = t("promptPlaceholder");
+          input.setAttribute("aria-label", `${t("promptInputLabel")} ${index + 1}`);
           input.addEventListener("input", (event) => {
             promptState[index] = event.target.value;
             scheduleAutoSave();
           });
           const delBtn = iconButton("trash", () => removePrompt(index));
+          delBtn.setAttribute("title", t("deletePrompt"));
+          delBtn.setAttribute("aria-label", t("deletePrompt"));
           row.appendChild(handle);
           row.appendChild(input);
           row.appendChild(delBtn);
@@ -726,6 +1064,20 @@
         promptState.splice(targetIndex, 0, moved);
       }
 
+      function movePromptByKeyboard(event, index) {
+        const delta = event.key === "ArrowUp" ? -1 : event.key === "ArrowDown" ? 1 : 0;
+        if (!delta) return;
+        event.preventDefault();
+        const targetIndex = index + delta;
+        if (targetIndex < 0 || targetIndex >= promptState.length) return;
+        const moved = promptState.splice(index, 1)[0];
+        promptState.splice(targetIndex, 0, moved);
+        renderPromptList();
+        scheduleAutoSave();
+        const handles = promptList.querySelectorAll(".drag-handle");
+        handles[targetIndex]?.focus();
+      }
+
       function clearDragOver() {
         document.querySelectorAll(".prompt-item.drag-over, .prompt-item.drag-over-top, .prompt-item.drag-over-bottom").forEach((node) => {
           node.classList.remove("drag-over", "drag-over-top", "drag-over-bottom");
@@ -750,20 +1102,43 @@
         startScriptInput.value = data.config.OPENCLAW_START_SCRIPT || "";
         activeWindowInput.value = data.config.OPENCLAW_ACTIVE_WINDOW_SECONDS || "";
         promptState = Array.isArray(data.quickPrompts) ? data.quickPrompts.slice() : [];
-        renderPromptList();
+        if (!languageChangedByUser && translations[data.language]) {
+          applyLanguage(data.language);
+        } else {
+          renderPromptList();
+        }
         setNeedsReload(false);
+      }
+
+      async function saveLanguage(language) {
+        const sequence = ++languageSaveSequence;
+        try {
+          const res = await fetch("/api/language", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ language }),
+          });
+          if (!res.ok) throw new Error("language sync failed");
+          if (sequence === languageSaveSequence && currentLanguage === language) {
+            setStatus("ok", "languageSynced");
+          }
+        } catch (err) {
+          if (sequence === languageSaveSequence && currentLanguage === language) {
+            setStatus("error", "languageSaveError");
+          }
+        }
       }
 
       async function loadConfig() {
         try {
-          setLoading(true, "正在读取配置…");
+          setLoading(true, "loadingRead");
           const res = await fetch("/api/config");
           if (!res.ok) throw new Error("无法读取配置");
           const data = await res.json();
           applyConfig(data);
-          setStatus("ok", "配置已载入。修改会自动保存。");
+          setStatus("ok", "configLoaded");
         } catch (err) {
-          setStatus("error", "读取失败，请检查后台服务是否运行。");
+          setStatus("error", "configLoadError");
         } finally {
           setLoading(false);
         }
@@ -772,7 +1147,7 @@
       async function saveConfig() {
         const rootValue = rootInput.value.trim();
         if (!rootValue) {
-          setStatus("error", "请填写 OpenClaw 状态目录，系统才能自动保存。");
+          setStatus("error", "rootRequired");
           rootInput.focus();
           return;
         }
@@ -789,17 +1164,17 @@
         try {
           if (isSaving) return;
           isSaving = true;
-          setStatus("warn", "正在自动保存…");
+          setStatus("warn", "saving");
           const res = await fetch("/api/config", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
           if (!res.ok) throw new Error("保存失败");
-          setStatus("ok", "已自动保存。请点击重新载入让设置生效。");
+          setStatus("ok", "saved");
           setNeedsReload(true);
         } catch (err) {
-          setStatus("error", "自动保存失败，请检查权限或稍后重试。");
+          setStatus("error", "saveError");
         } finally {
           isSaving = false;
           if (pendingSave) {
@@ -811,14 +1186,14 @@
 
       reloadBtn.addEventListener("click", async () => {
         try {
-          setLoading(true, "正在重新载入桌面精灵…");
+          setLoading(true, "loadingRestart");
           const res = await fetch("/api/restart", { method: "POST" });
           const data = await res.json();
           if (!data.ok) throw new Error("restart failed");
-          setStatus("ok", "已触发重新载入。设置将在重启后生效。");
+          setStatus("ok", "restarted");
           setNeedsReload(false);
         } catch (err) {
-          setStatus("error", "重新载入失败，请稍后重试。");
+          setStatus("error", "restartError");
         } finally {
           setLoading(false);
         }
@@ -830,17 +1205,17 @@
       activeWindowInput.addEventListener("input", scheduleAutoSave);
       pickRootBtn.addEventListener("click", async () => {
         try {
-          setLoading(true, "正在打开目录选择器…");
-          const res = await fetch("/api/pick-root", { method: "POST" });
+          setLoading(true, "loadingPicker");
+          const res = await fetch(`/api/pick-root?lang=${encodeURIComponent(currentLanguage)}`, { method: "POST" });
           const data = await res.json();
           if (data.ok && data.path) {
             rootInput.value = data.path;
             scheduleAutoSave();
           } else {
-            setStatus("error", "未选择目录或被取消。");
+            setStatus("error", "pickerCancelled");
           }
         } catch (err) {
-          setStatus("error", "无法打开选择器，请稍后重试。");
+          setStatus("error", "pickerError");
         } finally {
           setLoading(false);
         }
@@ -851,6 +1226,14 @@
         scheduleAutoSave();
       });
 
+      languageSelect.addEventListener("change", (event) => {
+        const language = event.target.value;
+        languageChangedByUser = true;
+        applyLanguage(language);
+        saveLanguage(language);
+      });
+
+      applyLanguage(currentLanguage, false);
       loadConfig();
     </script>
   </body>

@@ -4195,17 +4195,13 @@ struct OpenClawStatusControlView: View {
             : Color(red: 255 / 255, green: 92 / 255, blue: 92 / 255)
     }
 
-    private var labelText: String {
-        if busy {
-            return "处理中..."
-        }
-        return running ? "重载" : "启动"
+    private var controlHelpText: String {
+        if busy { return "OpenClaw is working" }
+        return running ? "Reload OpenClaw" : "Start OpenClaw"
     }
 
     private var expandedWidth: CGFloat {
-        let font = NSFont.systemFont(ofSize: 11.5, weight: .semibold)
-        let textWidth = (labelText as NSString).size(withAttributes: [.font: font]).width
-        return ceil(textWidth) + 32
+        44
     }
 
     var body: some View {
@@ -4215,13 +4211,21 @@ struct OpenClawStatusControlView: View {
                     statusDot
                         .padding(.leading, 5)
 
-                    Text(labelText)
-                        .font(.system(size: 11.5, weight: .semibold))
-                        .foregroundStyle(Color.white.opacity(0.94))
-                        .lineLimit(1)
-                        .fixedSize(horizontal: true, vertical: false)
-                        .padding(.leading, 22)
-                        .opacity(expanded ? 1 : 0)
+                    Group {
+                        if busy {
+                            ProgressView()
+                                .controlSize(.small)
+                                .tint(Color.white.opacity(0.94))
+                                .scaleEffect(0.72)
+                        } else {
+                            Image(systemName: running ? "power" : "play.fill")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundStyle(Color.white.opacity(0.94))
+                        }
+                    }
+                    .frame(width: 18, height: 18)
+                    .padding(.leading, 22)
+                    .opacity(expanded ? 1 : 0)
                 }
                 .frame(width: expanded ? expandedWidth : 18, height: 24, alignment: .leading)
                 .background(
@@ -4236,6 +4240,8 @@ struct OpenClawStatusControlView: View {
             }
             .buttonStyle(.plain)
             .disabled(busy)
+            .accessibilityLabel(controlHelpText)
+            .help(controlHelpText)
 
             if hovering {
                 Button(action: onSettingsTap) {
@@ -4253,6 +4259,8 @@ struct OpenClawStatusControlView: View {
                         )
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Open settings")
+                .help("Open settings")
                 .transition(.scale(scale: 0.92).combined(with: .opacity))
             }
         }
