@@ -64,6 +64,37 @@ class ConsoleSecurityTests(unittest.TestCase):
             self.assertEqual(mode, stat.S_IRUSR | stat.S_IWUSR)
             self.assertNotIn("\nINJECTED", path.read_text(encoding="utf-8"))
 
+    def test_localizes_folder_picker_prompt(self):
+        self.assertEqual(
+            console_server.picker_prompt("en"),
+            "Choose the OpenClaw state folder",
+        )
+        self.assertEqual(
+            console_server.picker_prompt("ja"),
+            "OpenClaw の状態フォルダーを選択",
+        )
+        self.assertEqual(
+            console_server.picker_prompt("unsupported"),
+            "选择 OpenClaw 状态目录",
+        )
+
+    def test_language_config_preserves_quick_prompts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            previous_path = console_server.PROMPTS_PATH
+            console_server.PROMPTS_PATH = Path(tmp) / "console_config.json"
+            try:
+                console_server.save_prompts(["Action one", "Action two"])
+                console_server.save_language("ja")
+                self.assertEqual(console_server.load_language(), "ja")
+                self.assertEqual(
+                    console_server.load_prompts(),
+                    ["Action one", "Action two"],
+                )
+                with self.assertRaises(ValueError):
+                    console_server.save_language("unsupported")
+            finally:
+                console_server.PROMPTS_PATH = previous_path
+
 
 if __name__ == "__main__":
     unittest.main()

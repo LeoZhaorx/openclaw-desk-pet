@@ -2,9 +2,10 @@
 import json
 import os
 import stat
+import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 import subprocess
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -15,6 +16,8 @@ PROMPTS_PATH = ROOT_DIR / "console_config.json"
 RESTART_SCRIPT = ROOT_DIR.parent / "restart-desk-pet.command"
 MAX_REQUEST_BYTES = 64 * 1024
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
+SUPPORTED_LANGUAGES = {"zh-CN", "zh-TW", "en", "ja"}
+CONFIG_LOCK = threading.Lock()
 ENV_KEYS = [
     "OPENCLAW_ROOT",
     "OPENCLAW_GATEWAY_URL",
@@ -32,6 +35,17 @@ DEFAULT_QUICK_PROMPTS = [
     "检查下这两天的重要邮件。",
     "给朋友发消息，通知已经遛狗了！",
 ]
+
+PICKER_PROMPTS = {
+    "zh-CN": "选择 OpenClaw 状态目录",
+    "zh-TW": "選擇 OpenClaw 狀態目錄",
+    "en": "Choose the OpenClaw state folder",
+    "ja": "OpenClaw の状態フォルダーを選択",
+}
+
+
+def picker_prompt(language: str) -> str:
+    return PICKER_PROMPTS.get(language, PICKER_PROMPTS["zh-CN"])
 
 
 def _single_line(value: object, field: str) -> str:
@@ -131,32 +145,17 @@ def save_env(path: Path, data: dict) -> None:
     os.chmod(path, stat.S_IRUSR | stat.S_IWUSR)
 
 
-def load_prompts() -> list:
+def _load_console_config_unlocked() -> dict:
     if not PROMPTS_PATH.exists():
-        save_prompts(DEFAULT_QUICK_PROMPTS)
-        return DEFAULT_QUICK_PROMPTS[:]
+        return {}
     try:
         raw = json.loads(PROMPTS_PATH.read_text(encoding="utf-8"))
-        values = raw.get("quickPrompts", [])
-        if not isinstance(values, list):
-            return []
-        cleaned = []
-        seen = set()
-        for item in values:
-            text = str(item).strip()
-            if not text or text in seen:
-                continue
-            seen.add(text)
-            cleaned.append(text)
-        if not cleaned:
-            save_prompts(DEFAULT_QUICK_PROMPTS)
-            return DEFAULT_QUICK_PROMPTS[:]
-        return cleaned
+        return raw if isinstance(raw, dict) else {}
     except Exception:
-        return DEFAULT_QUICK_PROMPTS[:]
+        return {}
 
 
-def save_prompts(values: list) -> None:
+def _clean_prompts(values: list) -> list:
     cleaned = []
     seen = set()
     for item in values:
@@ -165,8 +164,48 @@ def save_prompts(values: list) -> None:
             continue
         seen.add(text)
         cleaned.append(text)
-    payload = {"quickPrompts": cleaned}
-    PROMPTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return cleaned
+
+
+def _update_console_config(*, prompts=None, language=None) -> None:
+    with CONFIG_LOCK:
+        payload = _load_console_config_unlocked()
+        if prompts is not None:
+            payload["quickPrompts"] = _clean_prompts(prompts)
+        if language is not None:
+            if language not in SUPPORTED_LANGUAGES:
+                raise ValueError("Unsupported language")
+            payload["language"] = language
+        temporary_path = PROMPTS_PATH.with_suffix(f"{PROMPTS_PATH.suffix}.tmp")
+        temporary_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        os.replace(temporary_path, PROMPTS_PATH)
+
+
+def load_prompts() -> list:
+    with CONFIG_LOCK:
+        raw = _load_console_config_unlocked()
+    values = raw.get("quickPrompts", [])
+    if not isinstance(values, list):
+        return DEFAULT_QUICK_PROMPTS[:]
+    cleaned = _clean_prompts(values)
+    return cleaned or DEFAULT_QUICK_PROMPTS[:]
+
+
+def save_prompts(values: list) -> None:
+    _update_console_config(prompts=values)
+
+
+def load_language() -> str:
+    with CONFIG_LOCK:
+        language = _load_console_config_unlocked().get("language", "")
+    return language if language in SUPPORTED_LANGUAGES else ""
+
+
+def save_language(language: str) -> None:
+    _update_console_config(language=language)
 
 
 def detect_openclaw_roots() -> list:
@@ -239,6 +278,7 @@ class ConsoleHandler(SimpleHTTPRequestHandler):
                     "OPENCLAW_START_SCRIPT": env.get("OPENCLAW_START_SCRIPT", ""),
                 },
                 "quickPrompts": load_prompts(),
+                "language": load_language(),
                 "detectedRoots": detect_openclaw_roots(),
                 "assetsDir": str(UI_DIR),
                 "envPath": str(ENV_PATH),
@@ -274,7 +314,9 @@ class ConsoleHandler(SimpleHTTPRequestHandler):
                 return self._send_json({"ok": False, "error": str(exc)}, code=500)
         if parsed.path == "/api/pick-root":
             try:
-                script = 'POSIX path of (choose folder with prompt "选择 OpenClaw 状态目录")'
+                language = parse_qs(parsed.query).get("lang", ["zh-CN"])[0]
+                prompt = picker_prompt(language).replace('"', '\\"')
+                script = f'POSIX path of (choose folder with prompt "{prompt}")'
                 output = subprocess.check_output(["osascript", "-e", script], stderr=subprocess.STDOUT)
                 path = output.decode("utf-8").strip()
                 return self._send_json({"ok": True, "path": path})
@@ -283,6 +325,14 @@ class ConsoleHandler(SimpleHTTPRequestHandler):
                 return self._send_json({"ok": False, "error": message or "cancelled"})
             except Exception as exc:
                 return self._send_json({"ok": False, "error": str(exc)})
+        if parsed.path == "/api/language":
+            try:
+                data = self._read_json()
+                language = str(data.get("language", "")) if isinstance(data, dict) else ""
+                save_language(language)
+                return self._send_json({"ok": True, "language": language})
+            except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+                return self._send_json({"ok": False, "error": str(exc)}, code=400)
         if parsed.path != "/api/config":
             return self._send_json({"ok": False, "error": "Not found"}, code=404)
         try:
